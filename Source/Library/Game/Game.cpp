@@ -255,20 +255,6 @@ namespace library
     {
         if (g_pImmediateContext)
             g_pImmediateContext->ClearState();
-        if (g_pRenderTargetView)
-            g_pRenderTargetView->Release();
-        if (g_pSwapChain1)
-            g_pSwapChain1->Release();
-        if (g_pSwapChain)
-            g_pSwapChain->Release();
-        if (g_pImmediateContext1)
-            g_pImmediateContext1->Release();
-        if (g_pImmediateContext)
-            g_pImmediateContext->Release();
-        if (g_pd3dDevice1)
-            g_pd3dDevice1->Release();
-        if (g_pd3dDevice)
-            g_pd3dDevice->Release();
     }
 
     void Render()
