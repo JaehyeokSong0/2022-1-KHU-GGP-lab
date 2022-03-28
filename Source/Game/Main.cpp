@@ -1,15 +1,18 @@
 ﻿/*+===================================================================
   File:      MAIN.CPP
 
-  Summary:   This application demonstrates creating a Direct3D 11 device
+  Summary:   This application demonstrates creating a Direct3D 11
+             device in a object-oriented fashion
 
-  Origin:    http://msdn.microsoft.com/en-us/library/windows/apps/ff729718.aspx
+  Origin:    https://docs.microsoft.com/en-us/previous-versions//ff729719(v=vs.85)
 
   Originally created by Microsoft Corporation under MIT License
   © 2022 Kyung Hee University
 ===================================================================+*/
 
 #include "Common.h"
+
+#include <memory>
 
 #include "Game/Game.h"
 
@@ -36,34 +39,15 @@
 -----------------------------------------------------------------F-F*/
 INT WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ INT nCmdShow)
 {
-
-    UNREFERENCED_PARAMETER(lpCmdLine);
     UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
 
-    if (FAILED(library::InitWindow(hInstance, nCmdShow)))
-        return 0;
+    std::unique_ptr<library::Game> game = std::make_unique<library::Game>(L"Game Graphics Programming Lab 02: Object Oriented Design");
 
-    if (FAILED(library::InitDevice()))
+    if (FAILED(game->Initialize(hInstance, nCmdShow)))
     {
-        library::CleanupDevice();
         return 0;
     }
 
-    // Main message loop
-    MSG msg = { 0 };
-
-    while (WM_QUIT != msg.message)
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-            library::Render();
-    }
-
-    library::CleanupDevice();
-
-    return static_cast<INT>(msg.wParam);
+    return game->Run();
 }
