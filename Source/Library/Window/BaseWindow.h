@@ -114,6 +114,7 @@ namespace library
 
         return DefWindowProc(hWnd, uMessage, wParam, lParam);
     }
+
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
         Method:   BaseWindow<DerivedType>::BaseWindow
 
@@ -123,11 +124,11 @@ namespace library
     M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
     template <class DerivedType>
     BaseWindow<DerivedType>::BaseWindow()
-    {
-        m_hInstance = nullptr;
-        m_hWnd = nullptr;
-        m_pszWindowName = nullptr;
-    }
+        : m_hInstance(nullptr),
+        m_hWnd(nullptr),
+        m_pszWindowName(L"Game Graphics Programming")
+    {}
+
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
         Method:   BaseWindow<DerivedType>::GetWindow()
 
@@ -141,6 +142,7 @@ namespace library
     {
         return m_hWnd;
     }
+
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
       Method:   BaseWindow<DerivedType>::initialize
 
@@ -191,7 +193,6 @@ namespace library
         m_pszWindowName = pszWindowName;
 
         // Registering a Window Class
-        const wchar_t CLASS_NAME[] = L"Game Graphics Programming Lab 02: Object Oriented Design";
         WNDCLASSEX wcex =
         {
             .cbSize = sizeof(WNDCLASSEX),
@@ -204,7 +205,7 @@ namespace library
             .hCursor = LoadCursor(nullptr, IDC_ARROW),
             .hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1),
             .lpszMenuName = nullptr,
-            .lpszClassName = CLASS_NAME,
+            .lpszClassName = GetWindowClassName(),
             .hIconSm = LoadIcon(wcex.hInstance,IDI_APPLICATION)
         };
 
@@ -222,13 +223,13 @@ namespace library
         m_hWnd = CreateWindowEx
         (
             0,
-            CLASS_NAME,
-            m_pszWindowName,
+            GetWindowClassName(),
+            pszWindowName,
             dwStyle,
             x,
             y,
             nWidth,
-            nHeight, 
+            nHeight,
             hWndParent,
             hMenu,
             m_hInstance,
