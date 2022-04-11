@@ -75,6 +75,13 @@ namespace library
                 ElapsedTime = (FLOAT)(StopTime.QuadPart - StartTime.QuadPart);
                 ElapsedTime /= (FLOAT)(Frequency.QuadPart);
 
+                m_renderer->HandleInput(
+                    m_mainWindow->GetDirections(),
+                    m_mainWindow->GetMouseRelativeMovement(),
+                    ElapsedTime
+                );
+                m_mainWindow->ResetMouseMovement();
+
                 m_renderer->Update(ElapsedTime);
                 m_renderer->Render();
             }
