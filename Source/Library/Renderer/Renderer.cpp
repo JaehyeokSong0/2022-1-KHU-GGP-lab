@@ -8,9 +8,11 @@ namespace library
       Summary:  Constructor
 
       Modifies: [m_driverType, m_featureLevel, m_d3dDevice, m_d3dDevice1,
-                  m_immediateContext, m_immediateContext1, m_swapChain,
-                  m_swapChain1, m_renderTargetView, m_vertexShader,
-                  m_pixelShader, m_vertexLayout, m_vertexBuffer].
+                 m_immediateContext, m_immediateContext1, m_swapChain,
+                 m_swapChain1, m_renderTargetView, m_depthStencil,
+                 m_depthStencilView, m_cbChangeOnResize, m_camera,
+                 m_projection, m_renderables, m_vertexShaders, 
+                 m_pixelShaders].
     M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
     Renderer::Renderer()
         : m_driverType(D3D_DRIVER_TYPE_NULL),
@@ -24,12 +26,15 @@ namespace library
         m_renderTargetView(nullptr),
         m_depthStencil(nullptr),
         m_depthStencilView(nullptr),
-        m_camera(XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)),
+        m_cbChangeOnResize(nullptr),
+        m_padding(),
+        m_camera(XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f)),
         m_projection(),
-        m_renderables(std::unordered_map<PCWSTR, std::shared_ptr<Renderable>>()),
-        m_vertexShaders(std::unordered_map<PCWSTR, std::shared_ptr<VertexShader>>()),
-        m_pixelShaders(std::unordered_map<PCWSTR, std::shared_ptr<PixelShader>>())
+        m_renderables(std::unordered_map<std::wstring, std::shared_ptr<Renderable>>()),
+        m_vertexShaders(std::unordered_map<std::wstring, std::shared_ptr<VertexShader>>()),
+        m_pixelShaders(std::unordered_map<std::wstring, std::shared_ptr<PixelShader>>())
     {}
+
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
       Method:   Renderer::Initialize
 
@@ -39,9 +44,10 @@ namespace library
                   Handle to the window
 
       Modifies: [m_d3dDevice, m_featureLevel, m_immediateContext,
-                  m_d3dDevice1, m_immediateContext1, m_swapChain1,
-                  m_swapChain, m_renderTargetView, m_vertexShader,
-                  m_vertexLayout, m_pixelShader, m_vertexBuffer].
+                 m_d3dDevice1, m_immediateContext1, m_swapChain1,
+                 m_swapChain, m_renderTargetView, m_cbChangeOnResize, 
+                 m_projection, m_camera, m_vertexShaders, 
+                 m_pixelShaders, m_renderables].
 
       Returns:  HRESULT
                   Status code
@@ -80,14 +86,14 @@ namespace library
         for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
         {
             m_driverType = driverTypes[driverTypeIndex];
-            hr = D3D11CreateDevice(nullptr, m_driverType, nullptr, createDeviceFlags, 
-                featureLevels, numFeatureLevels, D3D11_SDK_VERSION, 
+            hr = D3D11CreateDevice(nullptr, m_driverType, nullptr, createDeviceFlags,
+                featureLevels, numFeatureLevels, D3D11_SDK_VERSION,
                 m_d3dDevice.GetAddressOf(), &m_featureLevel, m_immediateContext.GetAddressOf());
 
             if (hr == E_INVALIDARG)
             {
                 hr = D3D11CreateDevice(nullptr, m_driverType, nullptr, createDeviceFlags,
-                    &featureLevels[1], numFeatureLevels - 1, D3D11_SDK_VERSION, 
+                    &featureLevels[1], numFeatureLevels - 1, D3D11_SDK_VERSION,
                     m_d3dDevice.GetAddressOf(), &m_featureLevel, m_immediateContext.GetAddressOf());
             }
 
@@ -122,12 +128,12 @@ namespace library
             if (SUCCEEDED(hr))
                 hr = m_immediateContext.As(&m_immediateContext1);
 
-            DXGI_SWAP_CHAIN_DESC1 sd = 
+            DXGI_SWAP_CHAIN_DESC1 sd =
             {
                 .Width = width,
                 .Height = height,
                 .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
-                .SampleDesc = 
+                .SampleDesc =
                 {
                     .Count = 1,
                     .Quality = 0
@@ -135,7 +141,7 @@ namespace library
                 .BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
                 .BufferCount = 1
             };
-           
+
 
             hr = dxgiFactory2->CreateSwapChainForHwnd(m_d3dDevice.Get(), hWnd, &sd, nullptr, nullptr, m_swapChain1.GetAddressOf());
             if (SUCCEEDED(hr))
@@ -149,10 +155,10 @@ namespace library
                 {
                     .Width = width,
                     .Height = height,
-                    .RefreshRate = 
+                    .RefreshRate =
                     {
-                        .Numerator = 60, 
-                        .Denominator = 1 
+                        .Numerator = 60,
+                        .Denominator = 1
                     },
                     .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
                 },
@@ -191,10 +197,10 @@ namespace library
             .MipLevels = 1,
             .ArraySize = 1,
             .Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
-            .SampleDesc = 
+            .SampleDesc =
             {
                 .Count = 1,
-                .Quality = 0 
+                .Quality = 0
             },
             .Usage = D3D11_USAGE_DEFAULT,
             .BindFlags = D3D11_BIND_DEPTH_STENCIL,
@@ -210,7 +216,7 @@ namespace library
         {
             .Format = descDepth.Format,
             .ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D,
-            .Texture2D = 
+            .Texture2D =
             {
                 .MipSlice = 0
             }
@@ -235,7 +241,7 @@ namespace library
         m_immediateContext->RSSetViewports(1, &vp);
 
         m_projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, (FLOAT)width / (FLOAT)height, 0.01f, 100.0f);
-        
+
         for (auto vertexShader : m_vertexShaders)
             hr = vertexShader.second->Initialize(m_d3dDevice.Get());
         if (FAILED(hr))
@@ -250,7 +256,26 @@ namespace library
             hr = renderables.second->Initialize(m_d3dDevice.Get(), m_immediateContext.Get());
         if (FAILED(hr))
             return hr;
-        
+
+        D3D11_BUFFER_DESC bd =
+        {
+            .ByteWidth = sizeof(CBChangeOnResize),
+            .Usage = D3D11_USAGE_DEFAULT,
+            .BindFlags = D3D11_BIND_CONSTANT_BUFFER,
+            .CPUAccessFlags = 0,
+        };
+
+        hr = m_d3dDevice->CreateBuffer(&bd, nullptr, m_cbChangeOnResize.GetAddressOf());
+        if (FAILED(hr))
+            return hr;
+
+        CBChangeOnResize cb =
+        {
+            .Projection = XMMatrixTranspose(m_projection)
+        };
+
+        m_immediateContext->UpdateSubresource(m_cbChangeOnResize.Get(), 0, nullptr, &cb, 0, 0);
+
         m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         return hr;
@@ -283,6 +308,7 @@ namespace library
         return hr;
     }
 
+
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
       Method:   Renderer::AddVertexShader
 
@@ -309,6 +335,7 @@ namespace library
 
         return hr;
     }
+
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
       Method:   Renderer::AddPixelShader
 
@@ -335,22 +362,27 @@ namespace library
 
         return hr;
     }
+
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
       Method:   Renderer::HandleInput
+
       Summary:  Add the pixel shader into the renderer and initialize it
+
       Args:     const DirectionsInput& directions
                   Data structure containing keyboard input data
                 const MouseRelativeMovement& mouseRelativeMovement
                   Data structure containing mouse relative input data
+
       Modifies: [m_camera].
     M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
     void Renderer::HandleInput(
-        _In_ const DirectionsInput& directions, 
-        _In_ const MouseRelativeMovement& mouseRelativeMovement, 
+        _In_ const DirectionsInput& directions,
+        _In_ const MouseRelativeMovement& mouseRelativeMovement,
         _In_ FLOAT deltaTime)
     {
         m_camera.HandleInput(directions, mouseRelativeMovement, deltaTime);
     }
+
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
       Method:   Renderer::Update
 
@@ -384,11 +416,9 @@ namespace library
             m_immediateContext->IASetIndexBuffer(renderable.second->GetIndexBuffer().Get(), DXGI_FORMAT_R16_UINT, 0);
             m_immediateContext->IASetInputLayout(renderable.second->GetVertexLayout().Get());
 
-            ConstantBuffer cb =
+            CBChangesEveryFrame cb =
             {
-                .World = XMMatrixTranspose(renderable.second->GetWorldMatrix()),
-                .View = XMMatrixTranspose(m_camera.GetView()),
-                .Projection = XMMatrixTranspose(m_projection)
+                .World = XMMatrixTranspose(renderable.second->GetWorldMatrix())
             };
             m_immediateContext->UpdateSubresource(renderable.second->GetConstantBuffer().Get(), 0, nullptr, &cb, 0, 0);
 
@@ -423,11 +453,12 @@ namespace library
         if ((m_renderables.find(pszRenderableName) == m_renderables.end())
             || (m_vertexShaders.find(pszVertexShaderName) == m_vertexShaders.end()))
             hr = E_FAIL;
-       
+
         m_renderables.find(pszRenderableName)->second->SetVertexShader(m_vertexShaders.find(pszVertexShaderName)->second);
 
         return hr;
     }
+
 
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
       Method:   Renderer::SetPixelShaderOfRenderable

@@ -1,12 +1,16 @@
 #pragma once
 
-#include "Cube/BaseCube.h"
+#include "Cube/Cube.h"
 
 class RotateCube : public BaseCube
 {
 public:
-    RotateCube() = default;
+    RotateCube(const std::filesystem::path& textureFilePath);
+    RotateCube(const RotateCube& other) = delete;
+    RotateCube(RotateCube&& other) = delete;
+    RotateCube& operator=(const RotateCube& other) = delete;
+    RotateCube& operator=(RotateCube&& other) = delete;
     ~RotateCube() = default;
 
-    void Update(_In_ FLOAT deltaTime) override;
+    virtual void Update(_In_ FLOAT deltaTime) override;
 };

@@ -30,13 +30,10 @@
     <ClCompile Include="Cube\BaseCube.cpp">
       <Filter>소스 파일\Cube</Filter>
     </ClCompile>
+    <ClCompile Include="Cube\Cube.cpp">
+      <Filter>소스 파일\Cube</Filter>
+    </ClCompile>
     <ClCompile Include="Cube\RotateCube.cpp">
-      <Filter>소스 파일\Cube</Filter>
-    </ClCompile>
-    <ClCompile Include="Cube\CenterCube.cpp">
-      <Filter>소스 파일\Cube</Filter>
-    </ClCompile>
-    <ClCompile Include="Cube\MyCube.cpp">
       <Filter>소스 파일\Cube</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,13 +41,10 @@
     <ClInclude Include="Cube\BaseCube.h">
       <Filter>헤더 파일\Cube</Filter>
     </ClInclude>
-    <ClInclude Include="Cube\CenterCube.h">
+    <ClInclude Include="Cube\Cube.h">
       <Filter>헤더 파일\Cube</Filter>
     </ClInclude>
     <ClInclude Include="Cube\RotateCube.h">
-      <Filter>헤더 파일\Cube</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube\MyCube.h">
       <Filter>헤더 파일\Cube</Filter>
     </ClInclude>
   </ItemGroup>
@@ -66,5 +60,13 @@
     <None Include="Shaders\Shaders.fxh">
       <Filter>Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="seafloor.dds">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="dog.dds">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

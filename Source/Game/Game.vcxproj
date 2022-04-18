@@ -95,15 +95,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Cube\BaseCube.cpp" />
-    <ClCompile Include="Cube\CenterCube.cpp" />
-    <ClCompile Include="Cube\MyCube.cpp" />
+    <ClCompile Include="Cube\Cube.cpp" />
     <ClCompile Include="Cube\RotateCube.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube\BaseCube.h" />
-    <ClInclude Include="Cube\CenterCube.h" />
-    <ClInclude Include="Cube\MyCube.h" />
+    <ClInclude Include="Cube\Cube.h" />
     <ClInclude Include="Cube\RotateCube.h" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +110,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Shaders.fxh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="dog.dds" />
+    <Image Include="seafloor.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

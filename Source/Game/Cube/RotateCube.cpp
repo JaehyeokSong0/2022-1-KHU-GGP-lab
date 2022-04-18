@@ -1,5 +1,9 @@
 #include "Cube/RotateCube.h"
 
+RotateCube::RotateCube(const std::filesystem::path& textureFilePath)
+	: BaseCube(textureFilePath)
+{}
+
 void RotateCube::Update(_In_ FLOAT deltaTime)
 {
 	XMMATRIX mSpin = XMMatrixRotationZ(-deltaTime);
