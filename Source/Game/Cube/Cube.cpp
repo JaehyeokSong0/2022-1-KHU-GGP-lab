@@ -5,11 +5,11 @@
 
   Summary:  Constructor
 
-  Args:     const std::filesystem::path& textureFilePath
-              Path to the texture to use
+  Args:     const XMFLOAT4& outputColor
+			  Default color of the cube
 M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
-Cube::Cube(const std::filesystem::path& textureFilePath)
-    : BaseCube(textureFilePath)
+Cube::Cube(_In_ const XMFLOAT4& outputColor)
+	: BaseCube(outputColor)
 {}
 
 /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
@@ -18,14 +18,12 @@ Cube::Cube(const std::filesystem::path& textureFilePath)
   Summary:  Updates the cube every frame
 
   Args:     FLOAT deltaTime
-              Elapsed time
+			  Elapsed time
 
   Modifies: [m_world].
 M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
 void Cube::Update(_In_ FLOAT deltaTime)
 {
-    static FLOAT s_totalTime = 0.0f;
-    s_totalTime += deltaTime;
-
-    m_world = XMMatrixTranslation(0.0f, XMScalarSin(s_totalTime), 0.0f) * XMMatrixRotationY(s_totalTime);
+	UNREFERENCED_PARAMETER(deltaTime);
+	// Does nothing
 }

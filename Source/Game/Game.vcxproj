@@ -10,6 +10,63 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Cube\BaseCube.cpp" />
+    <ClCompile Include="Cube\Cube.cpp" />
+    <ClCompile Include="Cube\CustomCube.cpp" />
+    <ClCompile Include="Cube\RotatingCube.cpp" />
+    <ClCompile Include="Light\RotatingPointLight.cpp" />
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cube\BaseCube.h" />
+    <ClInclude Include="Cube\Cube.h" />
+    <ClInclude Include="Cube\CustomCube.h" />
+    <ClInclude Include="Cube\RotatingCube.h" />
+    <ClInclude Include="Light\RotatingPointLight.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nanosuit\nanosuit.mtl" />
+    <None Include="Shaders\PhongShaders.fxh" />
+    <None Include="Shaders\Shaders.fxh" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\PS.hlsl" />
+    <FxCompile Include="Shaders\VS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="nanosuit\arm_dif.png" />
+    <Image Include="nanosuit\arm_showroom_ddn.png" />
+    <Image Include="nanosuit\arm_showroom_refl.png" />
+    <Image Include="nanosuit\arm_showroom_spec.png" />
+    <Image Include="nanosuit\back.jpg" />
+    <Image Include="nanosuit\body_dif.png" />
+    <Image Include="nanosuit\body_showroom_ddn.png" />
+    <Image Include="nanosuit\body_showroom_refl.png" />
+    <Image Include="nanosuit\body_showroom_spec.png" />
+    <Image Include="nanosuit\cell_arm_alpha.png" />
+    <Image Include="nanosuit\cell_body_alpha.png" />
+    <Image Include="nanosuit\cell_ddn.png" />
+    <Image Include="nanosuit\cell_hand_alpha.png" />
+    <Image Include="nanosuit\cell_helmet_alpha.png" />
+    <Image Include="nanosuit\cell_leg_alpha.png" />
+    <Image Include="nanosuit\front.jpg" />
+    <Image Include="nanosuit\glass_ddn.png" />
+    <Image Include="nanosuit\glass_dif.png" />
+    <Image Include="nanosuit\glass_refl.png" />
+    <Image Include="nanosuit\hand_dif.png" />
+    <Image Include="nanosuit\hand_showroom_ddn.png" />
+    <Image Include="nanosuit\hand_showroom_refl.png" />
+    <Image Include="nanosuit\hand_showroom_spec.png" />
+    <Image Include="nanosuit\helmet_diff.png" />
+    <Image Include="nanosuit\helmet_showroom_ddn.png" />
+    <Image Include="nanosuit\helmet_showroom_refl.png" />
+    <Image Include="nanosuit\helmet_showroom_spec.png" />
+    <Image Include="nanosuit\leg_dif.png" />
+    <Image Include="nanosuit\leg_showroom_ddn.png" />
+    <Image Include="nanosuit\leg_showroom_refl.png" />
+    <Image Include="nanosuit\leg_showroom_spec.png" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -93,28 +150,6 @@
       <ShaderType>Pixel</ShaderType>
     </FxCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Cube\BaseCube.cpp" />
-    <ClCompile Include="Cube\Cube.cpp" />
-    <ClCompile Include="Cube\RotateCube.cpp" />
-    <ClCompile Include="Main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Cube\BaseCube.h" />
-    <ClInclude Include="Cube\Cube.h" />
-    <ClInclude Include="Cube\RotateCube.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shaders\PS.hlsl" />
-    <FxCompile Include="Shaders\VS.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\Shaders.fxh" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="dog.dds" />
-    <Image Include="seafloor.dds" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

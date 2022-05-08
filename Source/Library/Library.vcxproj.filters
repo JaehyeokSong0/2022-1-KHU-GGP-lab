@@ -5,77 +5,91 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\Renderer">
-      <UniqueIdentifier>{3a41d650-d24e-4ee0-b708-7fc209642d42}</UniqueIdentifier>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{de62059d-0d6b-40e7-aabb-98fa4423c460}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Renderer">
-      <UniqueIdentifier>{7d309fe8-7a2a-4c28-a685-7fa05c5194fe}</UniqueIdentifier>
+      <UniqueIdentifier>{488258da-1f9b-446f-be7c-2425ad52c07f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Camera">
-      <UniqueIdentifier>{9d7e8e82-b36b-4f05-bcb1-a36dfad55673}</UniqueIdentifier>
+    <Filter Include="소스 파일\Renderer">
+      <UniqueIdentifier>{ad394c40-492a-4956-ae9a-8b08d5b7ec22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Camera">
-      <UniqueIdentifier>{5fc3dfd5-265f-41d6-998b-3df54e44fee4}</UniqueIdentifier>
+    <Filter Include="헤더 파일\Model">
+      <UniqueIdentifier>{f402da03-ba5d-4c43-ac25-f80fec901e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Model">
+      <UniqueIdentifier>{bde4daf5-9dfc-459c-9511-1b870c45d931}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Texture">
-      <UniqueIdentifier>{a6797db1-6757-4432-9197-a14272c32f37}</UniqueIdentifier>
+      <UniqueIdentifier>{80199960-3a4f-48ac-aa8f-0be57dfa4690}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Texture">
-      <UniqueIdentifier>{22131c4d-150d-43f8-a95d-cc6afc28fa8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Shader">
-      <UniqueIdentifier>{349fcf38-7384-49f8-87bd-b45678f0632a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Window">
-      <UniqueIdentifier>{b7125338-68fd-4e5c-abe6-244965e7df7d}</UniqueIdentifier>
+      <UniqueIdentifier>{e4e377eb-77d0-4176-96a8-2461894d4077}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Shader">
-      <UniqueIdentifier>{a433c197-ba03-4b0d-b6c3-4506d566c989}</UniqueIdentifier>
+      <UniqueIdentifier>{7ecd0030-2114-4411-9039-b8e736724569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader">
+      <UniqueIdentifier>{4446cd52-f587-46db-8509-5148fca66a5f}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Window">
-      <UniqueIdentifier>{af3d6ec3-c301-4197-8c39-e47f7f9d4127}</UniqueIdentifier>
+      <UniqueIdentifier>{f0a56832-a543-459e-86d2-ff91d4f5c157}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Game">
-      <UniqueIdentifier>{8135bb81-674a-4772-9c9d-8fa761d4bc6f}</UniqueIdentifier>
+    <Filter Include="소스 파일\Window">
+      <UniqueIdentifier>{d0060412-c9fb-45f6-99a9-0d34400f8e39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Light">
+      <UniqueIdentifier>{f7161d70-cda2-479a-8da1-50fc4bb2055f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Light">
+      <UniqueIdentifier>{03b64bd2-504b-4dd7-8a58-2dc1b3f9ae28}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Game">
-      <UniqueIdentifier>{0b7bbac4-b647-4527-8134-5f89ce222b0a}</UniqueIdentifier>
+      <UniqueIdentifier>{bfa84d83-610b-4a51-b20d-6999e4c96114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Game">
+      <UniqueIdentifier>{72ca5870-e5cf-48a3-98fa-052a7a448d7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Camera">
+      <UniqueIdentifier>{cd403e62-bb86-4a84-8aaf-8789a2efce66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Camera">
+      <UniqueIdentifier>{56533247-b440-4089-a104-516ebb030811}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Renderer.h">
-      <Filter>헤더 파일\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Renderable.h">
       <Filter>헤더 파일\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\DataTypes.h">
-      <Filter>헤더 파일\Renderer</Filter>
+    <ClInclude Include="Model\Model.h">
+      <Filter>헤더 파일\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Camera\Camera.h">
-      <Filter>헤더 파일\Camera</Filter>
+    <ClInclude Include="Texture\Texture.h">
+      <Filter>헤더 파일\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\WICTextureLoader.h">
+      <Filter>헤더 파일\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\Material.h">
+      <Filter>헤더 파일\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Texture\DDSTextureLoader.h">
       <Filter>헤더 파일\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\PixelShader.h">
+      <Filter>헤더 파일\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Shader\Shader.h">
       <Filter>헤더 파일\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Shader\VertexShader.h">
-      <Filter>헤더 파일\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader\PixelShader.h">
       <Filter>헤더 파일\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Window\BaseWindow.h">
@@ -84,22 +98,40 @@
     <ClInclude Include="Window\MainWindow.h">
       <Filter>헤더 파일\Window</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\DataTypes.h">
+      <Filter>헤더 파일\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Renderer.h">
+      <Filter>헤더 파일\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\PointLight.h">
+      <Filter>헤더 파일\Light</Filter>
+    </ClInclude>
     <ClInclude Include="Game\Game.h">
       <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\Camera.h">
+      <Filter>헤더 파일\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Renderer\Renderer.cpp">
-      <Filter>소스 파일\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Renderable.cpp">
       <Filter>소스 파일\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Camera\Camera.cpp">
-      <Filter>소스 파일\Camera</Filter>
+    <ClCompile Include="Model\Model.cpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\Texture.cpp">
+      <Filter>소스 파일\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\WICTextureLoader.cpp">
+      <Filter>소스 파일\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\Material.cpp">
+      <Filter>소스 파일\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Texture\DDSTextureLoader.cpp">
       <Filter>소스 파일\Texture</Filter>
@@ -116,18 +148,22 @@
     <ClCompile Include="Window\MainWindow.cpp">
       <Filter>소스 파일\Window</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Renderer.cpp">
+      <Filter>소스 파일\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\PointLight.cpp">
+      <Filter>소스 파일\Light</Filter>
+    </ClCompile>
     <ClCompile Include="Game\Game.cpp">
       <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>소스 파일\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="directx.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
   </ItemGroup>
 </Project>

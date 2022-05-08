@@ -14,18 +14,33 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="소스 파일\Cube">
-      <UniqueIdentifier>{e59c4aca-414f-46f0-84ea-db29ec99399f}</UniqueIdentifier>
+      <UniqueIdentifier>{c3720bd7-5ee8-4541-ab97-47f79d3f6859}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Cube">
-      <UniqueIdentifier>{d6a7ee9e-848d-4bba-8083-1ead9c2e7dd3}</UniqueIdentifier>
+      <UniqueIdentifier>{d241e441-7f2b-4ab9-bca4-d57e5059d4c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{73627430-0eb9-40bf-8fd6-773308d393b0}</UniqueIdentifier>
+    <Filter Include="소스 파일\Light">
+      <UniqueIdentifier>{dd6e7f50-9f2e-4cc2-88ac-f2a2b8b90abe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Light">
+      <UniqueIdentifier>{9f70e665-bb0e-43ad-8f48-ce9fc51af98f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shaders">
+      <UniqueIdentifier>{3256e82f-f2b2-429f-ae08-f26b700b054e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\nanosuit">
+      <UniqueIdentifier>{d2cb5fb1-fd6d-4ec5-838d-ebb38b8dd79b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube\CustomCube.cpp">
+      <Filter>소스 파일\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube\RotatingCube.cpp">
+      <Filter>소스 파일\Cube</Filter>
     </ClCompile>
     <ClCompile Include="Cube\BaseCube.cpp">
       <Filter>소스 파일\Cube</Filter>
@@ -33,8 +48,8 @@
     <ClCompile Include="Cube\Cube.cpp">
       <Filter>소스 파일\Cube</Filter>
     </ClCompile>
-    <ClCompile Include="Cube\RotateCube.cpp">
-      <Filter>소스 파일\Cube</Filter>
+    <ClCompile Include="Light\RotatingPointLight.cpp">
+      <Filter>소스 파일\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,29 +59,128 @@
     <ClInclude Include="Cube\Cube.h">
       <Filter>헤더 파일\Cube</Filter>
     </ClInclude>
-    <ClInclude Include="Cube\RotateCube.h">
+    <ClInclude Include="Cube\CustomCube.h">
       <Filter>헤더 파일\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube\RotatingCube.h">
+      <Filter>헤더 파일\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\RotatingPointLight.h">
+      <Filter>헤더 파일\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\PS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\VS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Shaders\PhongShaders.fxh">
+      <Filter>소스 파일\Shaders</Filter>
+    </None>
     <None Include="Shaders\Shaders.fxh">
-      <Filter>Shaders</Filter>
+      <Filter>소스 파일\Shaders</Filter>
+    </None>
+    <None Include="nanosuit\nanosuit.mtl">
+      <Filter>리소스 파일\nanosuit</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="seafloor.dds">
-      <Filter>리소스 파일</Filter>
+    <FxCompile Include="Shaders\PS.hlsl">
+      <Filter>소스 파일\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS.hlsl">
+      <Filter>소스 파일\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="nanosuit\arm_dif.png">
+      <Filter>리소스 파일\nanosuit</Filter>
     </Image>
-    <Image Include="dog.dds">
-      <Filter>리소스 파일</Filter>
+    <Image Include="nanosuit\arm_showroom_ddn.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\arm_showroom_refl.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\arm_showroom_spec.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\back.jpg">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\body_dif.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\body_showroom_ddn.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\body_showroom_refl.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\body_showroom_spec.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\cell_arm_alpha.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\cell_body_alpha.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\cell_ddn.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\cell_hand_alpha.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\cell_helmet_alpha.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\cell_leg_alpha.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\front.jpg">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\glass_ddn.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\glass_dif.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\glass_refl.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\hand_dif.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\hand_showroom_ddn.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\hand_showroom_refl.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\hand_showroom_spec.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\helmet_diff.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\helmet_showroom_ddn.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\helmet_showroom_refl.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\helmet_showroom_spec.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\leg_dif.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\leg_showroom_ddn.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\leg_showroom_refl.png">
+      <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="nanosuit\leg_showroom_spec.png">
+      <Filter>리소스 파일\nanosuit</Filter>
     </Image>
   </ItemGroup>
 </Project>

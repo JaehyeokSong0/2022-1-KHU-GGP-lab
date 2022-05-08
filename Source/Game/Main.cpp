@@ -6,20 +6,20 @@
   Origin:    http://msdn.microsoft.com/en-us/library/windows/apps/ff729718.aspx
 
   Originally created by Microsoft Corporation under MIT License
-  © 2022 Kyung Hee University
+  ?2022 Kyung Hee University
 ===================================================================+*/
 
 #include "Common.h"
 
 #include <cstdio>
-#include <filesystem>
 #include <memory>
-#include <source_location>
 
-#include "Cube/Cube.h"
 #include "Game/Game.h"
 
-#include "Cube/RotateCube.h"
+#include "Cube/Cube.h"
+#include "Cube/RotatingCube.h"
+#include "Light/RotatingPointLight.h"
+#include "Model/Model.h"
 
 /*F+F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   Function: wWinMain
@@ -47,41 +47,108 @@ INT WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 #ifdef _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    std::unique_ptr<library::Game> game = std::make_unique<library::Game>(L"Game Graphics Programming Lab 05: Texture Mapping and Constant Buffers");
+    std::unique_ptr<library::Game> game = std::make_unique<library::Game>(L"Game Graphics Programming Lab 07: Modeling");
 
-    std::shared_ptr<library::VertexShader> vertexShader = std::make_shared<library::VertexShader>(L"Shaders/Shaders.fxh", "VS", "vs_5_0");
-    if (FAILED(game->GetRenderer()->AddVertexShader(L"MainShader", vertexShader)))
+    // Light Cube
+    std::shared_ptr<library::VertexShader> lightVertexShader = std::make_shared<library::VertexShader>(L"Shaders/PhongShaders.fxh", "VSLightCube", "vs_5_0");
+    if (FAILED(game->GetRenderer()->AddVertexShader(L"LightShader", lightVertexShader)))
     {
         return 0;
     }
 
-    std::shared_ptr<library::PixelShader> pixelShader = std::make_shared<library::PixelShader>(L"Shaders/Shaders.fxh", "PS", "ps_5_0");
-    if (FAILED(game->GetRenderer()->AddPixelShader(L"MainShader", pixelShader)))
+    // Light Cube
+    std::shared_ptr<library::PixelShader> lightPixelShader = std::make_shared<library::PixelShader>(L"Shaders/PhongShaders.fxh", "PSLightCube", "ps_5_0");
+    if (FAILED(game->GetRenderer()->AddPixelShader(L"LightShader", lightPixelShader)))
     {
         return 0;
     }
 
-    std::shared_ptr<Cube> cube = std::make_shared<Cube>("seafloor.dds");
-    if (FAILED(game->GetRenderer()->AddRenderable(L"Cube", cube)))
+    std::shared_ptr<library::VertexShader> phongVertexShader = std::make_shared<library::VertexShader>(L"Shaders/PhongShaders.fxh", "VSPhong", "vs_5_0");
+    if (FAILED(game->GetRenderer()->AddVertexShader(L"PhongShader", phongVertexShader)))
+    {
         return 0;
-    if (FAILED(game->GetRenderer()->SetVertexShaderOfRenderable(L"Cube", L"MainShader")))
-        return 0;
-    if (FAILED(game->GetRenderer()->SetPixelShaderOfRenderable(L"Cube", L"MainShader")))
-        return 0;
+    }
 
-    std::shared_ptr<RotateCube> rotateCube = std::make_shared<RotateCube>("dog.dds");
-    if (FAILED(game->GetRenderer()->AddRenderable(L"RotateCube", rotateCube)))
+    std::shared_ptr<library::PixelShader> phongPixelShader = std::make_shared<library::PixelShader>(L"Shaders/PhongShaders.fxh", "PSPhong", "ps_5_0");
+    if (FAILED(game->GetRenderer()->AddPixelShader(L"PhongShader", phongPixelShader)))
+    {
         return 0;
-    if (FAILED(game->GetRenderer()->SetVertexShaderOfRenderable(L"RotateCube", L"MainShader")))
+    }
+
+    std::shared_ptr<library::Model> NanoSuitModel = std::make_shared<library::Model>(L"nanosuit/nanosuit.obj");
+    if (FAILED(game->GetRenderer()->AddRenderable(L"NanoSuit", NanoSuitModel)))
+    {
         return 0;
-    if (FAILED(game->GetRenderer()->SetPixelShaderOfRenderable(L"RotateCube", L"MainShader")))
+    }
+    if (FAILED(game->GetRenderer()->SetVertexShaderOfRenderable(L"NanoSuit", L"PhongShader")))
+    {
         return 0;
+    }
+    if (FAILED(game->GetRenderer()->SetPixelShaderOfRenderable(L"NanoSuit", L"PhongShader")))
+    {
+        return 0;
+    }
+
+    XMFLOAT4 color;
+    XMStoreFloat4(&color, Colors::White);
+
+    std::shared_ptr<library::PointLight> directionalLight = std::make_shared<library::PointLight>(
+        XMFLOAT4(-5.77f, 5.77f, -5.77f, 1.0f),
+        color
+        );
+    if (FAILED(game->GetRenderer()->AddPointLight(0, directionalLight)))
+    {
+        return 0;
+    }
+
+    std::shared_ptr<Cube> lightCube = std::make_shared<Cube>(color);
+    lightCube->Translate(XMVectorSet(-5.77f, 5.77f, -5.77f, 0.0f));
+    if (FAILED(game->GetRenderer()->AddRenderable(L"LightCube", lightCube)))
+    {
+        return 0;
+    }
+    if (FAILED(game->GetRenderer()->SetVertexShaderOfRenderable(L"LightCube", L"LightShader")))
+    {
+        return 0;
+    }
+    if (FAILED(game->GetRenderer()->SetPixelShaderOfRenderable(L"LightCube", L"LightShader")))
+    {
+        return 0;
+    }
+
+    XMStoreFloat4(&color, Colors::Red);
+    std::shared_ptr<RotatingPointLight> rotatingDirectionalLight = std::make_shared<RotatingPointLight>(
+        XMFLOAT4(0.0f, 0.0f, -5.0f, 1.0f),
+        color
+        );
+    if (FAILED(game->GetRenderer()->AddPointLight(1, rotatingDirectionalLight)))
+    {
+        return 0;
+    }
+
+    std::shared_ptr<RotatingCube> rotatingLightCube = std::make_shared<RotatingCube>(color);
+    rotatingLightCube->Translate(XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f));
+    if (FAILED(game->GetRenderer()->AddRenderable(L"RotatingLightCube", rotatingLightCube)))
+    {
+        return 0;
+    }
+    if (FAILED(game->GetRenderer()->SetVertexShaderOfRenderable(L"RotatingLightCube", L"LightShader")))
+    {
+        return 0;
+    }
+    if (FAILED(game->GetRenderer()->SetPixelShaderOfRenderable(L"RotatingLightCube", L"LightShader")))
+    {
+        return 0;
+    }
 
     if (FAILED(game->Initialize(hInstance, nCmdShow)))
+    {
         return 0;
+    }
 
     return game->Run();
 }

@@ -1,5 +1,8 @@
 #include "Renderer/Renderable.h"
-#include "Texture/DDSTextureLoader.h"
+
+#include "assimp/Importer.hpp"	// C++ importer interface
+#include "assimp/scene.h"		// output data structure
+#include "assimp/postprocess.h"	// post processing flags
 
 namespace library
 {
@@ -8,23 +11,28 @@ namespace library
 
       Summary:  Constructor
 
-      Args:     const std::filesystem::path& textureFilePath
-                  Path to the texture to use
+      Args:     const XMFLOAT4& outputColor
+                  Default color of the renderable
 
-      Modifies: [m_vertexBuffer, m_indexBuffer, m_constantBuffer,
-                 m_textureRV, m_samplerLinear, m_vertexShader,
-                 m_pixelShader, m_textureFilePath, m_world].
+      Modifies: [m_vertexBuffer, m_indexBuffer, m_constantBuffer, 
+                 m_textureRV, m_samplerLinear, m_vertexShader, 
+                 m_pixelShader, m_textureFilePath, m_outputColor,
+                 m_world].
     M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
-    Renderable::Renderable(_In_ const std::filesystem::path& textureFilePath)
-        : m_vertexBuffer(nullptr),
-        m_indexBuffer(nullptr),
-        m_constantBuffer(nullptr),
-        m_textureRV(nullptr),
-        m_samplerLinear(nullptr),
-        m_vertexShader(nullptr),
-        m_pixelShader(nullptr),
-        m_textureFilePath(textureFilePath),
-        m_world()
+    Renderable::Renderable(_In_ const XMFLOAT4& outputColor)
+        : m_vertexBuffer()
+        , m_indexBuffer()
+        , m_constantBuffer()
+
+        , m_aMeshes()
+        , m_aMaterials()
+
+        , m_vertexShader()
+        , m_pixelShader()
+
+        , m_outputColor(outputColor)
+        , m_padding()
+        , m_world(XMMatrixIdentity())
     {}
 
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
@@ -37,71 +45,78 @@ namespace library
                 ID3D11DeviceContext* pImmediateContext
                   The Direct3D context to set buffers
 
-      Modifies: [m_vertexBuffer, m_indexBuffer, m_constantBuffer,
-                 m_textureRV, m_samplerLinear, m_world].
+      Modifies: [m_vertexBuffer, m_indexBuffer, m_constantBuffer].
 
       Returns:  HRESULT
                   Status code
     M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
     HRESULT Renderable::initialize(_In_ ID3D11Device* pDevice, _In_ ID3D11DeviceContext* pImmediateContext)
     {
-        HRESULT hr = S_OK;
+        UNREFERENCED_PARAMETER(pImmediateContext);
+        HRESULT hr;
 
-        D3D11_BUFFER_DESC bd =
-        {
-            .ByteWidth = sizeof(SimpleVertex) * GetNumVertices(),
+        // Create the vertex buffer
+        D3D11_BUFFER_DESC vBufferDesc = {
+            .ByteWidth = static_cast<UINT>(sizeof(SimpleVertex)) * GetNumVertices(),
             .Usage = D3D11_USAGE_DEFAULT,
             .BindFlags = D3D11_BIND_VERTEX_BUFFER,
             .CPUAccessFlags = 0,
+            .MiscFlags = 0
         };
 
-        D3D11_SUBRESOURCE_DATA InitData =
-        {
-            .pSysMem = getVertices()
+        D3D11_SUBRESOURCE_DATA vData = {
+            .pSysMem = getVertices(),
+            .SysMemPitch = 0,
+            .SysMemSlicePitch = 0
         };
 
-        hr = pDevice->CreateBuffer(&bd, &InitData, m_vertexBuffer.GetAddressOf());
-        if (FAILED(hr))
+        hr = pDevice->CreateBuffer(&vBufferDesc, &vData, &m_vertexBuffer);
+        if (FAILED(hr)) 
             return hr;
 
-        bd.ByteWidth = sizeof(WORD) * GetNumIndices();
-        bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-        InitData.pSysMem = getIndices();
-
-        hr = pDevice->CreateBuffer(&bd, &InitData, m_indexBuffer.GetAddressOf());
-        if (FAILED(hr))
-            return hr;
-
-        bd.ByteWidth = sizeof(CBChangesEveryFrame);
-        bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        bd.CPUAccessFlags = 0;
-
-        hr = pDevice->CreateBuffer(&bd, nullptr, m_constantBuffer.GetAddressOf());
-        if (FAILED(hr))
-            return hr;
-
-        D3D11_SAMPLER_DESC sampDesc = {
-            .Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR,
-            .AddressU = D3D11_TEXTURE_ADDRESS_WRAP,
-            .AddressV = D3D11_TEXTURE_ADDRESS_WRAP,
-            .AddressW = D3D11_TEXTURE_ADDRESS_WRAP,
-            .ComparisonFunc = D3D11_COMPARISON_NEVER,
-            .MinLOD = 0.0f,
-            .MaxLOD = D3D11_FLOAT32_MAX
+        // Create the index buffer
+        D3D11_BUFFER_DESC iBufferDesc = {
+            .ByteWidth = static_cast<UINT>(sizeof(WORD)) * GetNumIndices(),
+            .Usage = D3D11_USAGE_DEFAULT,
+            .BindFlags = D3D11_BIND_INDEX_BUFFER,
+            .CPUAccessFlags = 0,
+            .MiscFlags = 0
         };
 
-        hr = pDevice->CreateSamplerState(&sampDesc, m_samplerLinear.GetAddressOf());
-        if (FAILED(hr))
-            return hr;
+        D3D11_SUBRESOURCE_DATA iData = {
+            .pSysMem = getIndices(),
+            .SysMemPitch = 0,
+            .SysMemSlicePitch = 0
+        };
 
-        hr = CreateDDSTextureFromFile(pDevice, m_textureFilePath.filename().wstring().c_str(),
-            nullptr, m_textureRV.GetAddressOf());
-        if (FAILED(hr))
-            return hr;
+        hr = pDevice->CreateBuffer(&iBufferDesc, &iData, &m_indexBuffer);
+        if (FAILED(hr)) return hr;
 
-        m_world = XMMatrixIdentity();
+        // Create the constant buffer
+        D3D11_BUFFER_DESC cBufferDesc = {
+            .ByteWidth = sizeof(CBChangesEveryFrame),
+            .Usage = D3D11_USAGE_DEFAULT,
+            .BindFlags = D3D11_BIND_CONSTANT_BUFFER,
+            .CPUAccessFlags = 0,
+            .MiscFlags = 0,
+            .StructureByteStride = 0
+        };
 
-        return hr;
+        CBChangesEveryFrame cb = {
+            .World = XMMatrixTranspose(m_world),
+            .OutputColor = m_outputColor
+        };
+
+        D3D11_SUBRESOURCE_DATA cData = {
+            .pSysMem = &cb,
+            .SysMemPitch = 0,
+            .SysMemSlicePitch = 0
+        };
+
+        hr = pDevice->CreateBuffer(&cBufferDesc, &cData, &m_constantBuffer);
+        if (FAILED(hr)) return hr;
+
+        return S_OK;
     }
 
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
@@ -228,28 +243,185 @@ namespace library
     }
 
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
-      Method:   Renderable::GetTextureResourceView
+      Method:   Renderable::GetOutputColor
 
-      Summary:  Returns the texture resource view
+      Summary:  Returns the output color
 
-      Returns:  ComPtr<ID3D11ShaderResourceView>&
-                  The texture resource view
+      Returns:  const XMFLOAT4&
+                  The output color
     M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
-    ComPtr<ID3D11ShaderResourceView>& Renderable::GetTextureResourceView()
+    const XMFLOAT4& Renderable::GetOutputColor() const
     {
-        return m_textureRV;
+        return m_outputColor;
     }
 
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
-      Method:   Renderable::GetSamplerState
+      Method:   Renderable::HasTexture
 
-      Summary:  Returns the sampler state
+      Summary:  Returns whether the renderable has texture
 
-      Returns:  ComPtr<ID3D11SamplerState>&
-                  The sampler state
+      Returns:  BOOL
+                  Whether the renderable has texture
     M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
-    ComPtr<ID3D11SamplerState>& Renderable::GetSamplerState()
+    BOOL Renderable::HasTexture() const
     {
-        return m_samplerLinear;
+        if (m_aMaterials.empty())
+            return FALSE;
+        else
+            return TRUE;
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::GetMaterial
+
+      Summary:  Returns a material at given index
+
+      Returns:  const Material&
+                  Material at given index
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    const Material& Renderable::GetMaterial(UINT uIndex) const
+    {
+        assert(uIndex < m_aMaterials.size());
+
+        return m_aMaterials[uIndex];
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::GetMesh
+
+      Summary:  Returns a basic mesh entry at given index
+
+      Returns:  const Renderable::BasicMeshEntry&
+                  Basic mesh entry at given index
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    const Renderable::BasicMeshEntry& Renderable::GetMesh(UINT uIndex) const
+    {
+        assert(uIndex < m_aMeshes.size());
+
+        return m_aMeshes[uIndex];
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::RotateX
+
+      Summary:  Rotates around the x-axis
+
+      Args:     FLOAT angle
+                  Angle of rotation around the x-axis, in radians
+
+      Modifies: [m_world].
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    void Renderable::RotateX(_In_ FLOAT angle)
+    {
+        m_world *= XMMatrixRotationX(angle);
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::RotateY
+
+      Summary:  Rotates around the y-axis
+
+      Args:     FLOAT angle
+                  Angle of rotation around the y-axis, in radians
+
+      Modifies: [m_world].
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    void Renderable::RotateY(_In_ FLOAT angle)
+    {
+        m_world *= XMMatrixRotationY(angle);
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::RotateZ
+
+      Summary:  Rotates around the z-axis
+
+      Args:     FLOAT angle
+                  Angle of rotation around the z-axis, in radians
+
+      Modifies: [m_world].
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    void Renderable::RotateZ(_In_ FLOAT angle)
+    {
+        m_world *= XMMatrixRotationZ(angle);
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::RotateRollPitchYaw
+
+      Summary:  Rotates based on a given pitch, yaw, and roll (Euler angles)
+
+      Args:     FLOAT pitch
+                  Angle of rotation around the x-axis, in radians
+                FLOAT yaw
+                  Angle of rotation around the y-axis, in radians
+                FLOAT roll
+                  Angle of rotation around the z-axis, in radians
+
+      Modifies: [m_world].
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    void Renderable::RotateRollPitchYaw(_In_ FLOAT pitch, _In_ FLOAT yaw, _In_ FLOAT roll)
+    {
+        m_world *= XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::Scale
+
+      Summary:  Scales along the x-axis, y-axis, and z-axis
+
+      Args:     FLOAT scaleX
+                  Scaling factor along the x-axis.
+                FLOAT scaleY
+                  Scaling factor along the y-axis.
+                FLOAT scaleZ
+                  Scaling factor along the z-axis.
+
+      Modifies: [m_world].
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    void Renderable::Scale(_In_ FLOAT scaleX, _In_ FLOAT scaleY, _In_ FLOAT scaleZ)
+    {
+        m_world *= XMMatrixScaling(scaleX, scaleY, scaleZ);
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::Translate
+
+      Summary:  Translates matrix from a vector
+
+      Args:     const XMVECTOR& offset
+                  3D vector describing the translations along the x-axis, y-axis, and z-axis
+
+      Modifies: [m_world].
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    void Renderable::Translate(_In_ const XMVECTOR& offset)
+    {
+        m_world *= XMMatrixTranslationFromVector(offset);
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::GetNumMeshes
+
+      Summary:  Returns the number of meshes
+
+      Returns:  UINT
+                  Number of meshes
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    UINT Renderable::GetNumMeshes() const
+    {
+        return static_cast<UINT>(m_aMeshes.size());
+    }
+
+    /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
+      Method:   Renderable::GetNumMaterials
+
+      Summary:  Returns the number of materials
+
+      Returns:  UINT
+                  Number of materials
+    M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
+    UINT Renderable::GetNumMaterials() const
+    {
+        return static_cast<UINT>(m_aMaterials.size());
     }
 }
