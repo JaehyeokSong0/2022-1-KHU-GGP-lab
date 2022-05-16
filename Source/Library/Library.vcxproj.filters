@@ -60,6 +60,12 @@
     <Filter Include="소스 파일\Camera">
       <UniqueIdentifier>{56533247-b440-4089-a104-516ebb030811}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Scene">
+      <UniqueIdentifier>{0d7b78e5-1789-49be-ae91-4e5c56893f1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene">
+      <UniqueIdentifier>{aaaad11c-3438-4ef9-ba04-bfaad0a99482}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer\Renderable.h">
@@ -116,6 +122,15 @@
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\InstancedRenderable.h">
+      <Filter>헤더 파일\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>헤더 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Voxel.h">
+      <Filter>헤더 파일\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer\Renderable.cpp">
@@ -159,6 +174,15 @@
     </ClCompile>
     <ClCompile Include="Camera\Camera.cpp">
       <Filter>소스 파일\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedRenderable.cpp">
+      <Filter>소스 파일\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Voxel.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>소스 파일\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -114,7 +114,8 @@ namespace library
         };
 
         hr = pDevice->CreateBuffer(&cBufferDesc, &cData, &m_constantBuffer);
-        if (FAILED(hr)) return hr;
+        if (FAILED(hr))
+            return hr;
 
         return S_OK;
     }

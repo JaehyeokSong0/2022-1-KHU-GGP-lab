@@ -30,11 +30,15 @@ namespace library
 	  Returns:  HRESULT
 				  Status code
 	M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
-	HRESULT MainWindow::Initialize(_In_ HINSTANCE hInstance, _In_ INT nCmdShow, _In_ PCWSTR pszWindowName) {
-		HRESULT hr;
-		hr = initialize(hInstance, nCmdShow, pszWindowName, WS_OVERLAPPEDWINDOW);
-		if (FAILED(hr)) return hr;
+	HRESULT MainWindow::Initialize(_In_ HINSTANCE hInstance, _In_ INT nCmdShow, _In_ PCWSTR pszWindowName)
+	{
+		HRESULT hr = S_OK;
 
+		hr = initialize(hInstance, nCmdShow, pszWindowName, WS_OVERLAPPEDWINDOW);
+		if (FAILED(hr))
+			return hr;
+
+		// initialize raw input device for the first time
 		static bool didInitRawInput = false;
 		if (!didInitRawInput)
 		{
@@ -46,10 +50,12 @@ namespace library
 				.hwndTarget = nullptr
 			};
 
-			if (!RegisterRawInputDevices(&rid, 1, sizeof(rid))) return E_FAIL;
+			if (!RegisterRawInputDevices(&rid, 1, sizeof(rid)))
+				return E_FAIL;
 			didInitRawInput = true;
 		}
 
+		// set window size
 		RECT rc;
 		POINT p1, p2;
 
@@ -60,8 +66,10 @@ namespace library
 		p2.x = rc.right;
 		p2.y = rc.bottom;
 
-		if (!ClientToScreen(m_hWnd, &p1)) return E_FAIL;
-		if (!ClientToScreen(m_hWnd, &p2)) return E_FAIL;
+		if (!ClientToScreen(m_hWnd, &p1))
+			return E_FAIL;
+		if (!ClientToScreen(m_hWnd, &p2))
+			return E_FAIL;
 
 		rc.left = p1.x;
 		rc.top = p1.y;
@@ -71,7 +79,7 @@ namespace library
 		if (!ClipCursor(&rc))
 			return HRESULT_FROM_WIN32(GetLastError());
 
-		return S_OK;
+		return hr;
 	}
 
 	/*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
@@ -124,12 +132,15 @@ namespace library
 		case WM_INPUT:
 		{
 			UINT dataSize = 0;
-			GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, nullptr, &dataSize, sizeof(RAWINPUTHEADER));
+			GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT,
+				nullptr, &dataSize, sizeof(RAWINPUTHEADER));
 
-			if (dataSize <= 0) return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+			if (dataSize <= 0)
+				return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 
 			std::unique_ptr<BYTE[]> rawData = std::make_unique<BYTE[]>(dataSize);
-			if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, rawData.get(), &dataSize, sizeof(RAWINPUTHEADER)) == dataSize)
+			if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT,
+				rawData.get(), &dataSize, sizeof(RAWINPUTHEADER)) == dataSize)
 			{
 				RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(rawData.get());
 				if (raw->header.dwType == RIM_TYPEMOUSE)

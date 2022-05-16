@@ -1,6 +1,7 @@
 #include "Game/Game.h"
 
-namespace library {
+namespace library
+{
 	/*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
 	  Method:   Game::Game
 
@@ -33,16 +34,19 @@ namespace library {
 	  Returns:  HRESULT
 				Status code
 	M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
-	HRESULT Game::Initialize(_In_ HINSTANCE hInstance, _In_ INT nCmdShow) {
-		HRESULT hr;
+	HRESULT Game::Initialize(_In_ HINSTANCE hInstance, _In_ INT nCmdShow)
+	{
+		HRESULT hr = S_OK;
 
-		hr = m_mainWindow->Initialize(hInstance, nCmdShow, L"Game Graphics Programming Lab 04: 3D Spaces and Transformations");
-		if (FAILED(hr)) return hr;
+		hr = m_mainWindow->Initialize(hInstance, nCmdShow, L"Game Graphics Programming Assignment 02: Voxel Map");
+		if (FAILED(hr))
+			return hr;
 
 		hr = m_renderer->Initialize(m_mainWindow->GetWindow());
-		if (FAILED(hr)) return hr;
+		if (FAILED(hr))
+			return hr;
 
-		return S_OK;
+		return hr;
 	}
 
 	/*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
@@ -53,9 +57,10 @@ namespace library {
 	  Returns:  INT
 				  Status code to return to the operating system
 	M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
-	INT Game::Run() {
+	INT Game::Run()
+	{
 		MSG msg = {};
-		PeekMessage(&msg, nullptr, 0U, 0U, PM_NOREMOVE);
+		PeekMessage(&msg, nullptr, 0u, 0u, PM_NOREMOVE);
 
 		LARGE_INTEGER frequency;
 		QueryPerformanceFrequency(&frequency);
@@ -66,7 +71,7 @@ namespace library {
 		QueryPerformanceCounter(&startingTicks);
 		while (WM_QUIT != msg.message)
 		{
-			if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE) != 0)
+			if (PeekMessage(&msg, nullptr, 0u, 0u, PM_REMOVE) != 0)
 			{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
@@ -98,7 +103,8 @@ namespace library {
 	  Returns:  PCWSTR
 				  Name of the game
 	M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
-	PCWSTR Game::GetGameName() const {
+	PCWSTR Game::GetGameName() const
+	{
 		return m_pszGameName;
 	}
 

@@ -79,6 +79,9 @@
     <None Include="nanosuit\nanosuit.mtl">
       <Filter>리소스 파일\nanosuit</Filter>
     </None>
+    <None Include="Shaders\VoxelShaders.fxh">
+      <Filter>소스 파일\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PS.hlsl">
