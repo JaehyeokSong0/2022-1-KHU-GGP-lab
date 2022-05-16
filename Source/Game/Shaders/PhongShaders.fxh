@@ -67,7 +67,7 @@ C---C---C---C---C---C---C---C---C---C---C---C---C---C---C---C---C-C*/
 struct VS_PHONG_INPUT
 {
 	float4 Position : POSITION;
-	float2 TexCoord : TEXCOORD0;
+	float2 TexCoord : TEXCOORD;
 	float3 Normal : NORMAL;
 };
 
@@ -123,7 +123,6 @@ PS_LIGHT_CUBE_INPUT VSLightCube(VS_PHONG_INPUT input)
 
 	return output;
 }
-
 
 //--------------------------------------------------------------------------------------
 // Pixel Shader

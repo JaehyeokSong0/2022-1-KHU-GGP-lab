@@ -186,4 +186,7 @@
       <Filter>리소스 파일\nanosuit</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="HeightMap.txt" />
+  </ItemGroup>
 </Project>

@@ -4,11 +4,11 @@
 // Copyright (c) Kyung Hee University.
 //--------------------------------------------------------------------------------------
 
+#define NUM_LIGHTS (2)
+
 //--------------------------------------------------------------------------------------
 // Global Variables
 //--------------------------------------------------------------------------------------
-#define NUM_LIGHTS (2)
-
 Texture2D txDiffuse : register( t0 );
 SamplerState samLinear : register( s0 );
 
@@ -112,7 +112,7 @@ PS_INPUT VSVoxel(VS_INPUT input)
 float4 PSVoxel(PS_INPUT input) : SV_Target
 {
     float3 ambient = float3(0.1f, 0.1f, 0.1f);
-    float3 diffuse = (float3)0;
+    float3 diffuse = float3(0.0f, 0.0f, 0.0f);
     float3 lightDirection = float3(0.0f, 0.0f, 0.0f);
     
     for (uint i = 0; i < NUM_LIGHTS; ++i)

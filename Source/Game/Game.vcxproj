@@ -68,6 +68,9 @@
     <Image Include="nanosuit\leg_showroom_refl.png" />
     <Image Include="nanosuit\leg_showroom_spec.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="HeightMap.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -123,7 +126,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)..\Library\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
-      <EntryPointName>PS</EntryPointName>
+      <EntryPointName>PSVoxel</EntryPointName>
       <ShaderType>Pixel</ShaderType>
     </FxCompile>
   </ItemDefinitionGroup>
