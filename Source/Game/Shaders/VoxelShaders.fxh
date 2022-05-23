@@ -97,12 +97,14 @@ PS_INPUT VSVoxel(VS_INPUT input)
     
     output.Pos = mul(input.Pos, input.Transform);
     output.Pos = mul(output.Pos, World);
+    output.WorldPosition = output.Pos;
     output.Pos = mul(output.Pos, View);
     output.Pos = mul(output.Pos, Projection);
-    output.Tex = input.Tex;
-    output.Norm = normalize(mul(float4(input.Norm, 0), World).xyz);
-    output.WorldPosition = mul(input.Pos, World);
 
+    output.Norm = normalize(mul(float4(input.Norm, 0), World).xyz);
+
+    output.Tex = input.Tex;
+    
     return output;
 }
 
@@ -111,15 +113,16 @@ PS_INPUT VSVoxel(VS_INPUT input)
 //--------------------------------------------------------------------------------------
 float4 PSVoxel(PS_INPUT input) : SV_Target
 {
-    float3 ambient = float3(0.1f, 0.1f, 0.1f);
+    input.Norm = normalize(input.Norm);
+    float3 ambient = float3(0.0f, 0.0f, 0.0f);
     float3 diffuse = float3(0.0f, 0.0f, 0.0f);
     float3 lightDirection = float3(0.0f, 0.0f, 0.0f);
-    
+   
     for (uint i = 0; i < NUM_LIGHTS; ++i)
     {
+        lightDirection = normalize(LightPositions[i].xyz - input.WorldPosition);
         ambient += float3(0.1f, 0.1f, 0.1f) * LightColors[i].xyz;
-        diffuse += saturate(dot(normalize(input.Norm), lightDirection)) * LightColors[i];
-        lightDirection = normalize(input.WorldPosition - LightPositions[i].xyz);
+        diffuse += saturate(dot(input.Norm, lightDirection)) * LightColors[i];
     }
 
     return float4(diffuse + ambient, 1.0f) * OutputColor;
