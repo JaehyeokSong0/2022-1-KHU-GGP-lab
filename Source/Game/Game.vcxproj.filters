@@ -31,6 +31,12 @@
     <Filter Include="리소스 파일\nanosuit">
       <UniqueIdentifier>{d2cb5fb1-fd6d-4ec5-838d-ebb38b8dd79b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="리소스 파일\Content">
+      <UniqueIdentifier>{11b38aff-fe39-4ab4-8758-520b2b524002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\Content\BobLampClean">
+      <UniqueIdentifier>{b3845115-5a2f-470e-a862-693c36fc980c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -81,6 +87,15 @@
     </None>
     <None Include="Shaders\VoxelShaders.fxh">
       <Filter>소스 파일\Shaders</Filter>
+    </None>
+    <None Include="Shaders\SkinningShaders.fxh">
+      <Filter>소스 파일\Shaders</Filter>
+    </None>
+    <None Include="Content\boblampclean.md5anim">
+      <Filter>리소스 파일\Content\BobLampClean</Filter>
+    </None>
+    <None Include="Content\boblampclean.md5mesh">
+      <Filter>리소스 파일\Content\BobLampClean</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +199,21 @@
     </Image>
     <Image Include="nanosuit\leg_showroom_spec.png">
       <Filter>리소스 파일\nanosuit</Filter>
+    </Image>
+    <Image Include="Content\guard1_body.jpg">
+      <Filter>리소스 파일\Content\BobLampClean</Filter>
+    </Image>
+    <Image Include="Content\guard1_face.jpg">
+      <Filter>리소스 파일\Content\BobLampClean</Filter>
+    </Image>
+    <Image Include="Content\guard1_helmet.jpg">
+      <Filter>리소스 파일\Content\BobLampClean</Filter>
+    </Image>
+    <Image Include="Content\iron_grill.jpg">
+      <Filter>리소스 파일\Content\BobLampClean</Filter>
+    </Image>
+    <Image Include="Content\round_grill.jpg">
+      <Filter>리소스 파일\Content\BobLampClean</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
