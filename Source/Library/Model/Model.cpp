@@ -297,6 +297,10 @@ namespace library
      M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M---M-M*/
     void Model::countVerticesAndIndices(_Inout_ UINT& uOutNumVertices, _Inout_ UINT& uOutNumIndices, _In_ const aiScene* pScene)
     {
+        // Update pScene
+        m_aMeshes.resize(pScene->mNumMeshes);
+        m_aMaterials.resize(pScene->mNumMaterials);
+
         for (UINT i = 0u; i < m_aMeshes.size(); ++i)
         {
             m_aMeshes[i].uMaterialIndex = pScene->mMeshes[i]->mMaterialIndex;

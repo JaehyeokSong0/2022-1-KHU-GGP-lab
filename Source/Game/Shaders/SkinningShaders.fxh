@@ -65,7 +65,7 @@ cbuffer cbLights : register( b3 )
 C---C---C---C---C---C---C---C---C---C---C---C---C---C---C---C---C-C*/
 cbuffer cbSkinning : register( b4 )
 {
-	
+    matrix BoneTransforms[MAX_NUM_BONES];
 }
 
 //--------------------------------------------------------------------------------------
@@ -79,7 +79,8 @@ struct VS_INPUT
 	float4 Pos : POSITION;
     float2 Tex : TEXCOORD;
     float3 Norm : NORMAL;
-    row_major matrix Transform : INSTANCE_TRANSFORM;
+    uint4 BoneIndices : BONEINDICES;
+    float4 BoneWeights : BONEWEIGHTS; 
 };
 
 /*C+C+++C+++C+++C+++C+++C+++C+++C+++C+++C+++C+++C+++C+++C+++C+++C+++C
@@ -99,17 +100,24 @@ struct PS_PHONG_INPUT
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
-PS_PHONG_INPUT VSPhong(VS_PHONG_INPUT input)
+PS_PHONG_INPUT VSPhong(VS_INPUT input)
 {
-    PS_INPUT output = (PS_INPUT)0;
+    PS_PHONG_INPUT output = (PS_PHONG_INPUT)0;
     
-    output.Pos = mul(input.Pos, input.Transform);
+    matrix skinTransform = (matrix)0;
+    skinTransform += BoneTransforms[input.BoneIndices.x] * input.BoneWeights.x;
+    skinTransform += BoneTransforms[input.BoneIndices.y] * input.BoneWeights.y;
+    skinTransform += BoneTransforms[input.BoneIndices.z] * input.BoneWeights.z;
+    skinTransform += BoneTransforms[input.BoneIndices.w] * input.BoneWeights.w;
+
+    output.Pos = mul(input.Pos, skinTransform);
     output.Pos = mul(output.Pos, World);
-    output.WorldPosition = output.Pos;
+    output.WorldPos = output.Pos;
     output.Pos = mul(output.Pos, View);
     output.Pos = mul(output.Pos, Projection);
 
     output.Norm = normalize(mul(float4(input.Norm, 0), World).xyz);
+    output.Norm = normalize(mul(float4(output.Norm, 0), skinTransform).xyz);
 
     output.Tex = input.Tex;
     
@@ -119,7 +127,7 @@ PS_PHONG_INPUT VSPhong(VS_PHONG_INPUT input)
 //--------------------------------------------------------------------------------------
 // Pixel Shader
 //--------------------------------------------------------------------------------------
-float4 PSPhong(PS_PHONG_INPUT input) : SV_Target
+float4 PSPhong(PS_PHONG_INPUT input) : SV_TARGET
 {
     input.Norm = normalize(input.Norm);
     float3 ambient = float3(0.0f, 0.0f, 0.0f);
@@ -128,10 +136,10 @@ float4 PSPhong(PS_PHONG_INPUT input) : SV_Target
    
     for (uint i = 0; i < NUM_LIGHTS; ++i)
     {
-        lightDirection = normalize(LightPositions[i].xyz - input.WorldPosition);
+        lightDirection = normalize(LightPositions[i].xyz - input.WorldPos);
         ambient += float3(0.1f, 0.1f, 0.1f) * LightColors[i].xyz;
         diffuse += saturate(dot(input.Norm, lightDirection)) * LightColors[i];
     }
 
-    return float4(diffuse + ambient, 1.0f) * OutputColor;
+    return float4(diffuse + ambient, 1.0f) * txDiffuse.Sample(samLinear, input.Tex);
 }
